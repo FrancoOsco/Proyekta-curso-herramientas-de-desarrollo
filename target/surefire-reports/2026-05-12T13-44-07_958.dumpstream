@@ -1,0 +1,5 @@
+# Created at 2026-05-12T13:44:08.153
+Boot Manifest-JAR contains absolute paths in classpath 'E:\Descargas\caminatas2\(AC-S18-APF) Curso Integrador Proyecto Final\Projekta\springboot-web\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
