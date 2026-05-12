@@ -1,0 +1,7 @@
+com\curso\marcos_de_desarroll_web\springboot\web\springboot_web\model\Usuario.class
+com\curso\marcos_de_desarroll_web\springboot\web\springboot_web\config\SecurityConfig.class
+com\curso\marcos_de_desarroll_web\springboot\web\springboot_web\service\CustomUserDetailsService.class
+com\curso\marcos_de_desarroll_web\springboot\web\springboot_web\SpringbootWebApplication.class
+com\curso\marcos_de_desarroll_web\springboot\web\springboot_web\service\UsuarioService.class
+com\curso\marcos_de_desarroll_web\springboot\web\springboot_web\repository\UsuarioRepository.class
+com\curso\marcos_de_desarroll_web\springboot\web\springboot_web\controller\UsuarioController.class

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.curso.marcos_de_desarroll_web.springboot.web.springboot_web.SpringbootWebApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.650 s -- in com.curso.marcos_de_desarroll_web.springboot.web.springboot_web.SpringbootWebApplicationTests
