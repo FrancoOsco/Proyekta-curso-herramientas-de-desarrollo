@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html
+  lang="es"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+>
+  <head>
+    <meta charset="utf-8" />
+    <title>PROJEKTA - Tablero</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="Plantilla HTML Gratis" name="keywords" />
+    <meta content="Plantilla HTML Gratis" name="description" />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+    <link th:href="@{/img/favicon.png}" rel="icon" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link th:href="@{/lib/flaticon/font/flaticon.css}" rel="stylesheet" />
+    <link th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm py-3 py-lg-0 px-3 px-lg-5">
+      <a th:href="@{/home}" class="navbar-brand ms-lg-5">
+        <h1 class="m-0 text-uppercase text-dark">
+          <i class="bi bi-gear-wide-connected fs-1 text-primary me-3"></i>PROYEKTA
+        </h1>
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarCollapse"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse me-md-4" id="navbarCollapse">
+        <div class="navbar-nav ms-auto py-0">
+          <a th:href="@{/home}" class="nav-item nav-link">Inicio</a>
+          <a th:href="@{/tablero}" class="nav-item nav-link active">Tablero</a>
+
+          <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Páginas</a>
+            <div class="dropdown-menu m-0 mb-3 mt-md-3">
+              <a th:href="@{/home}" class="dropdown-item">Precios</a>
+              <a th:href="@{/home}" class="dropdown-item">Equipo</a>
+              <a th:href="@{/home}" class="dropdown-item">Testimonios</a>
+              <a th:href="@{/home}" class="dropdown-item">Blog</a>
+              <a th:href="@{/home}" class="dropdown-item">Detalle Blog</a>
+            </div>
+          </div>
+
+          <a
+            th:href="@{/home}"
+            class="nav-item nav-link nav-contact bg-primary text-white mt-0 px-4 px-md-5 ms-lg-5 mb-2 mb-md-0 ms-0"
+          >
+            Contacto <i class="bi bi-arrow-right"></i>
+          </a>
+
+          <div
+            sec:authorize="!isAuthenticated()"
+            class="ms-md-4 me-md-3 ms-0 d-flex align-items-center mt-2"
+          >
+            <a th:href="@{/login}" class="btn btn-outline-primary ms-md-3 ms-0">Iniciar sesión</a>
+          </div>
+
+          <div sec:authorize="isAuthenticated()" class="nav-item dropdown ms-0 ms-md-3">
+            <a
+              href="#"
+              class="nav-link dropdown-toggle d-flex align-items-center"
+              id="userMenu"
+              data-bs-toggle="dropdown"
+            >
+              <i class="bi bi-person-circle me-2 fs-4"></i>
+              <span sec:authentication="name">Usuario</span>
+            </a>
+            <ul
+              class="dropdown-menu dropdown-menu-end mb-2 mt-md-3 ms-md-0"
+              aria-labelledby="userMenu"
+            >
+              <li><a class="dropdown-item" th:href="@{/perfil}">Mi perfil</a></li>
+              <li>
+                <form th:action="@{/logout}" method="post" class="m-0">
+                  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                  <button type="submit" class="dropdown-item">Cerrar sesión</button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container my-3 my-md-4">
+      <div
+        class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-0 header-row"
+      >
+        <div class="d-flex flex-column flex-grow-1">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-kanban-fill fs-3 text-primary" aria-hidden="true"></i>
+            <div>
+              <h2 class="mb-0">Tablero de Proyectos</h2>
+              <small class="text-muted"
+                >Bienvenido a la interfaz inicial, Crea y administra tus proyectos.</small
+              >
+            </div>
+          </div>
+
+          <div class="mt-2 badge-wrap d-flex flex-wrap gap-2 align-items-center">
+            <span class="badge bg-light text-dark" id="totalProjectsHeader">4 proyectos</span>
+            <span class="badge bg-transparent border text-muted"
+              >Activos: <span id="activeProjectsHeader">0</span></span
+            >
+            <span class="badge bg-transparent border text-muted"
+              >Miembros totales: <span id="membersTotalHeader">0</span></span
+            >
+          </div>
+        </div>
+
+        <div
+          class="d-flex flex-column flex-sm-row gap-2 gap-md-6 align-items-stretch align-items-sm-center ms-lg-4 mt-3 mt-lg-0 center-mobile"
+        >
+          <div class="d-grid d-sm-block" style="min-width: 160px">
+            <button
+              id="btnNewProject"
+              class="btn btn-primary btn-xl w-100 w-sm-auto mb-2 mb-sm-0"
+              type="button"
+              disabled
+            >
+              Ingresar al proyecto
+            </button>
+          </div>
+
+          <div class="project-actions d-flex flex-column flex-sm-row" style="gap: 10px">
+            <button
+              id="btnImprovePlan"
+              class="btn btn-outline-texture btn-primary w-100 w-sm-auto mb-2 mb-sm-0 plan"
+            >
+              <i class="bi bi-star-fill me-2 star-badge" aria-hidden="true"></i>Mejorar Plan
+            </button>
+
+            <button
+              id="btnManageProjects"
+              class="btn btn-outline-light btn-outline-texture w-100 w-sm-auto plan"
+              style="color: rgba(0, 0, 0, 0.75)"
+            >
+              <i class="bi bi-folder2-open me-2" style="color: rgba(0, 0, 0, 0.5)"></i>Gestionar
+              proyectos
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-8 mb-1 mb-md-4">
+          <div id="kanban-root" class="kanban-board p-3 custom-desktop-mt">
+            <div class="muted-on-bg"></div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 mb-4 mt-0 pt-0 custom-desktop-mt">
+          <div class="d-flex flex-column gap-3">
+            <div class="card p-3 project-card">
+              <h5>Crear rápido</h5>
+              <p class="small muted-on-bg">
+                Crea un proyecto con los campos esenciales desde aquí, de forma rápida.
+              </p>
+              <button
+                class="btn btn-sm btn-outline-primary w-100"
+                data-bs-toggle="modal"
+                data-bs-target="#projectModal"
+              >
+                Crear proyecto
+              </button>
+            </div>
+
+            <div class="card p-3 project-card">
+              <h5>Selecciona un proyecto</h5>
+              <p class="small muted-on-bg">
+                Selecciona un proyecto existente para abrir su tablero y tareas.
+              </p>
+              <button
+                class="btn btn-sm btn-outline-primary w-100"
+                data-bs-toggle="modal"
+                data-bs-target="#enterProjectModal"
+              >
+                Seleccionar proyecto
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="modal fade"
+          id="planModal"
+          tabindex="-1"
+          aria-labelledby="planModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+              <div class="modal-header">
+                <h5 class="modal-title text-white" id="planModalLabel">Mejorar Plan</h5>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+
+              <div class="modal-body">
+                <p class="small muted-on-bg mb-3">
+                  Elige la opción que mejor se ajuste a tu equipo.
+                </p>
+
+                <div id="plansList" class="d-flex flex-column gap-3">
+                  <div class="plan-item card p-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h6 class="mb-1">Básico</h6>
+                        <div class="small text-muted text-black-75">
+                          1 proyecto activo • 3 miembros
+                        </div>
+                        <div class="small text-muted">Para pruebas y equipos pequeños.</div>
+                      </div>
+                      <div class="text-end">
+                        <div class="h5 mb-1">S/ 9</div>
+                        <div class="small-muted text-black-50">/mes</div>
+                      </div>
+                    </div>
+                    <div class="mt-3 d-flex justify-content-end">
+                      <button class="btn btn-sm btn-select-plan" data-plan="basico" data-price="9">
+                        Seleccionar
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="plan-item card p-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h6 class="mb-1">Pro</h6>
+                        <div class="small text-muted text-black-75">
+                          5 proyectos activos • 20 miembros
+                        </div>
+                        <div class="small text-muted">Ideal para equipos en crecimiento.</div>
+                      </div>
+                      <div class="text-end">
+                        <div class="h5 mb-1">S/ 29</div>
+                        <div class="small-muted text-black-50">/mes</div>
+                      </div>
+                    </div>
+                    <div class="mt-3 d-flex justify-content-end">
+                      <button class="btn btn-sm btn-select-plan" data-plan="pro" data-price="29">
+                        Seleccionar
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="plan-item card p-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h6 class="mb-1">Empresa</h6>
+                        <div class="small text-muted text-black-75">
+                          Proyectos ilimitados • <br />Usuarios ilimitados
+                        </div>
+                        <div class="small text-muted">
+                          Soporte prioritario y facturación personalizada.
+                        </div>
+                      </div>
+                      <div class="text-end">
+                        <div class="h5 mb-1">S/&nbsp;99</div>
+                        <div class="small text-black-50">/mes</div>
+                      </div>
+                    </div>
+                    <div class="mt-3 d-flex justify-content-end">
+                      <button
+                        class="btn btn-sm btn-select-plan"
+                        data-plan="empresa"
+                        data-price="99"
+                      >
+                        Seleccionar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="my-3" />
+
+                <div id="planSelected" class="d-none">
+                  <div class="small muted-on-bg">Has seleccionado:</div>
+                  <div class="fw-bold" id="planSelectedName"></div>
+                  <div class="small text-muted mb-3" id="planSelectedDetail"></div>
+                  <div class="d-flex gap-2">
+                    <button id="btnProceedPayment" class="btn btn-primary">Proceder al pago</button>
+                    <button id="btnCancelPlan" class="btn btn-secondary">Cancelar</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <small class="text-muted"
+                  >Métodos de pago: tarjeta / transferencia — integración pendiente.</small
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="modal fade"
+          id="enterProjectModal"
+          tabindex="-1"
+          aria-labelledby="enterProjectModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+              <div class="modal-header">
+                <h5 class="modal-title text-white" id="enterProjectModalLabel">
+                  Acceder a proyecto
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                  aria-label="Cerrar"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label class="form-label">Selecciona un proyecto local</label>
+                  <select id="selectProjectToEnter" class="form-select">
+                    <option value="">-- Seleccionar --</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">O unirse a una burbuja de otro usuario</label>
+                  <input
+                    id="projectIdInput"
+                    type="text"
+                    class="form-control"
+                    placeholder="Ingresa ID de proyecto"
+                  />
+                </div>
+                <small class="text-muted d-block"
+                  >Al acceder, se cargará el proyecto seleccionado o la sesión remota.</small
+                >
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  id="btnEnterProject"
+                  data-bs-dismiss="modal"
+                >
+                  Acceder
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section id="savedProjectsSection" class="mt-0 mt-md-2 mb-0 mb-md-5">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h4 class="mb-0">Proyectos guardados</h4>
+          <small id="totalProjects" class="muted-on-bg">0 proyectos</small>
+        </div>
+        <div id="projectsContainer" class="row projects-list"></div>
+      </section>
+    </main>
+
+    <div
+      class="modal fade"
+      id="allProjectsModal"
+      tabindex="-1"
+      aria-labelledby="allProjectsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+          <div class="modal-header">
+            <h5 class="modal-title text-white" id="allProjectsModalLabel">
+              Proyectos guardados : <small id="allProjectsCount" class="ms-2 muted-on-bg"></small>
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="allProjectsList" class="mb-2"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="projectModal"
+      tabindex="-1"
+      aria-labelledby="projectModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+          <div class="modal-header">
+            <h5 class="modal-title text-light" id="projectModalLabel">Nuevo proyecto</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <form id="projectForm">
+            <div class="modal-body mb-0">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label"
+                    >Nombre del proyecto <span class="text-danger">*</span></label
+                  >
+                  <input
+                    id="projectName"
+                    name="name"
+                    required
+                    type="text"
+                    class="form-control"
+                    placeholder="Ej: Tienda online mascotas"
+                  />
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Metodología</label>
+                  <select id="projectMethod" name="method" class="form-select">
+                    <option>Scrum</option>
+                    <option>Kanban</option>
+                    <option>Waterfall</option>
+                    <option>XP</option>
+                    <option>Otro</option>
+                  </select>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label">Descripción</label>
+                  <textarea
+                    id="projectDesc"
+                    name="description"
+                    rows="3"
+                    class="form-control"
+                    placeholder="¿De qué trata el proyecto?"
+                  ></textarea>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Miembros</label>
+                  <div class="d-flex gap-2 mb-2">
+                    <input
+                      id="memberQuickInput"
+                      type="text"
+                      class="form-control"
+                      placeholder="Nombre y apellidos"
+                    />
+                    <button type="button" id="btnAddMember" class="btn btn-outline-primary">
+                      Agregar
+                    </button>
+                    <button type="button" id="btnManageMembers" class="btn btn-outline-secondary">
+                      Gestionar
+                    </button>
+                  </div>
+                  <div
+                    id="membersPreview"
+                    class="mb-2"
+                    style="max-height: 120px; overflow: auto; padding-right: 4px"
+                  ></div>
+                  <small class="text-muted d-block"
+                    >Añade miembros uno a uno o pulsa <strong>Gestionar</strong> para añadir
+                    varios.</small
+                  >
+                </div>
+
+                <div class="col-md-3">
+                  <label class="form-label">Fecha inicio</label>
+                  <input id="projectStart" name="start" type="date" class="form-control" />
+                </div>
+
+                <div class="col-md-3">
+                  <label class="form-label">Fecha fin estimada</label>
+                  <input id="projectEnd" name="end" type="date" class="form-control" />
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary ms-md-0" data-bs-dismiss="modal">
+                Cancelar
+              </button>
+              <button id="saveProjectBtn" type="submit" class="btn btn-primary">
+                Guardar proyecto
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="membersModal"
+      tabindex="-1"
+      aria-labelledby="membersModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-md modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+          <div class="modal-header">
+            <h5 class="modal-title text-white" id="membersModalLabel">Gestionar miembros</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3 d-flex gap-2 align-items-center">
+              <label class="mb-0">Campos: </label>
+              <input
+                id="membersCount"
+                type="number"
+                min="0"
+                max="50"
+                value="3"
+                class="form-control form-control-sm w-25 ms-2"
+              />
+              <button id="btnGenerateMembers" type="button" class="btn btn-sm btn-outline-black">
+                Generar
+              </button>
+              <button id="btnAddField" type="button" class="btn btn-sm btn-outline-primary ms-auto">
+                + Añadir campo
+              </button>
+            </div>
+            <div id="membersFieldsContainer" style="max-height: 300px; overflow: auto"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button id="btnSaveMembersModal" type="button" class="btn btn-primary">
+              Guardar miembros
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="viewProjectModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+          <div class="modal-header">
+            <h5 class="modal-title text-white">Detalles del proyecto</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <h5 id="viewName" class="mb-0"></h5>
+                <div id="viewCodeWrap" class="small text-white-50 mt-1" style="line-height: 1.2">
+                  Código: <span id="viewCode" class="fw-bold"></span>
+                </div>
+              </div>
+              <div class="text-end">
+                <button id="btnCopyProjectCode" type="button" class="btn btn-sm btn-outline-light">
+                  <i class="bi bi-clipboard"></i> Copiar
+                </button>
+              </div>
+            </div>
+
+            <p id="viewDesc" class="small text-white-50"></p>
+            <p class="mb-1"><strong>Metodología:</strong> <span id="viewMethod"></span></p>
+            <p class="mb-1"><strong>Fechas:</strong> <span id="viewDates"></span></p>
+
+            <div class="mt-2">
+              <strong>Miembros:</strong>
+              <div id="viewMembers" class="mt-2"></div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid bg-dark text-white-50 mt-0" style="padding: 0.14rem">
+      <div class="container">
+        <div class="row g-4 align-items-center" style="padding: 0.8rem">
+          <div class="col-lg-4 text-center text-lg-start">
+            <h6 class="text-white mb-2" style="font-size: 1.2rem">Sobre PROJEKTA</h6>
+            <p class="mb-0 small" style="font-size: 0.75rem">
+              Impulsamos la productividad y el trabajo en equipo.
+            </p>
+          </div>
+
+          <div class="col-lg-4 text-center d-none d-lg-block">
+            <h6 class="text-white mb-2">Contáctanos:</h6>
+            <div class="d-flex justify-content-center gap-3">
+              <a class="text-white small" href="mailto:info@proyekta.pe">info@proyekta.pe</a>
+              <a class="text-white small" href="tel:+51999999999">+51 936 246 068</a>
+            </div>
+          </div>
+
+          <div class="col-lg-4 text-center text-lg-end">
+            <h6 class="text-white mb-2">Síguenos</h6>
+            <a class="text-white ms-2 fs-6" href="#"><i class="bi bi-facebook"></i></a>
+            <a class="text-white ms-2 fs-6" href="#"><i class="bi bi-twitter"></i></a>
+            <a class="text-white ms-2 fs-6" href="#"><i class="bi bi-instagram"></i></a>
+            <a class="text-white ms-2 fs-6" href="#"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <hr class="border-secondary mb-0 mt-0" />
+        <div class="row">
+          <div class="col-12 text-center">
+            <p class="mt-3 small text-white-50" style="margin-bottom: 0.75rem">
+              © 2025 PROJEKTA — Todos los derechos reservados.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="toastRoot"
+      class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3"
+      style="z-index: 1080; pointer-events: none"
+    >
+      <div
+        id="projectSuccessToast"
+        class="toast align-items-center shadow-sm bg-white border-0"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        data-bs-delay="4000"
+        style="pointer-events: auto"
+      >
+        <div class="d-flex">
+          <div class="toast-body small fw-semibold" id="projectSuccessToastBody">
+            ✅ Proyecto guardado correctamente.
+          </div>
+          <button
+            type="button"
+            class="btn-close me-1 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Cerrar"
+          ></button>
+        </div>
+      </div>
+
+      <div
+        id="projectErrorToast"
+        class="toast align-items-center shadow-sm bg-white border-0"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        data-bs-delay="4500"
+        style="pointer-events: auto"
+      >
+        <div class="d-flex">
+          <div class="toast-body small fw-semibold" id="projectErrorToastBody">
+            ❌ Ocurrió un error guardando el proyecto.
+          </div>
+          <button
+            type="button"
+            class="btn-close me-1 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Cerrar"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="confirmDeleteModal"
+      tabindex="-1"
+      aria-labelledby="confirmDeleteLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <h5 class="modal-title" id="confirmDeleteLabel">Confirmar eliminación</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex gap-3 align-items-start">
+              <div class="fs-2 text-danger"><i class="bi bi-trash-fill"></i></div>
+              <div>
+                <div class="fw-bold" id="confirmDeleteProjectName">Nombre del proyecto</div>
+                <div class="small text-muted" id="confirmDeleteProjectMeta">
+                  ¿Estás seguro que quieres eliminar este proyecto?
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 small text-muted">
+              Esta acción es <strong>irrecuperable</strong>. Las tareas asociadas se perderán.
+            </div>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button id="confirmDeleteBtn" type="button" class="btn btn-danger">
+              Eliminar proyecto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="previewProjectModal"
+      tabindex="-1"
+      aria-labelledby="previewProjectModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+          <div class="modal-header">
+            <h5 class="modal-title text-white" id="previewProjectModalLabel">
+              Previsualizar proyecto
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <div id="previewNotFound" class="small text-danger d-none">Proyecto no encontrado.</div>
+
+            <div id="previewContent">
+              <p class="small text-muted mb-2">
+                Código: <strong id="previewCode" class="text-white"></strong>
+              </p>
+              <h5 id="previewName" class="mb-1 text-white"></h5>
+              <p id="previewDesc" class="small text-white-50 mb-2"></p>
+              <p class="mb-1"><strong>Metodología:</strong> <span id="previewMethod"></span></p>
+              <p class="mb-1"><strong>Fechas:</strong> <span id="previewDates"></span></p>
+              <div class="mb-2">
+                <strong>Miembros:</strong>
+                <div id="previewMembers" class="mt-2"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              id="btnCancelPreview"
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button id="btnConfirmOpenProject" type="button" class="btn btn-primary">
+              Abrir proyecto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="selectProjectModal"
+      tabindex="-1"
+      aria-labelledby="selectProjectModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="selectProjectModalLabel">Atención</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="modal-body">
+            Debes seleccionar un proyecto primero o ingresar un código de proyecto.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/advertencia-ingresar.js}"></script>
+    <script th:src="@{/js/toasts.js}"></script>
+    <script th:src="@{/js/logica-tablero.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/seleccionar-proyecto.js}"></script>
+    <script th:src="@{/js/generar-codigo.js}"></script>
+    <script th:src="@{/js/enviar-info.js}"></script>
+  </body>
+</html>
