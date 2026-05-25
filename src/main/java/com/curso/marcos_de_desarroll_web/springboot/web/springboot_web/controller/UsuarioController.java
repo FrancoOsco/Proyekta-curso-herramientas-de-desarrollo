@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import com.curso.marcos_de_desarroll_web.springboot.web.springboot_web.model.Usuario;
 import com.curso.marcos_de_desarroll_web.springboot.web.springboot_web.service.UsuarioService;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class UsuarioController {
@@ -59,4 +61,11 @@ public class UsuarioController {
         }
         return "proyecto";
     }
+
+    // Sección de blog, accesible para todos los usuarios
+    @GetMapping("/blog")
+    public String mostrarBlog() {
+        return "blog";
+    }
+    
 }
