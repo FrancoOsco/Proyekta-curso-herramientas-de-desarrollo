@@ -12,7 +12,7 @@ services:
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=proyekta
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
 
   pdAdmin:
     image: dpage/pgadmin4
@@ -25,8 +25,6 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=alumno@google.com
       - PGADMIN_DEFAULT_PASSWORD=123456
-    volumes:
-      - ./pgadmin:/var/lib/pgadmin
-      - ./pgadmin:/certs/server.cert
-      - ./pgadmin:/certs/server.key
-      - ./pgadmin:/pgadmin4/servers.json
+
+volumes:
+  postgres_data:

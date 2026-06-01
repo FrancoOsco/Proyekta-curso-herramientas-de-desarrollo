@@ -17,22 +17,26 @@ public class Project {
     private Long id;
 
     @Column(unique = true)
-    private String code; 
+    private String code;
 
     @Column(name = "created_at")
     private String createdAt;
 
     private String description;
+
+    @Column(name = "end_date")
     private String end;
+
     private String method;
 
     @Column(nullable = false)
     private String name;
 
+    @Column(name = "start_date")
     private String start;
 
     @Column(name = "members", columnDefinition = "TEXT")
-    private String members; 
+    private String members;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
