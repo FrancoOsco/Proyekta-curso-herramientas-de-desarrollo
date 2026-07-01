@@ -1,0 +1,24 @@
+name: Incidente Simulado
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  incidente:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Verificar archivo crítico
+        run: |
+          echo "Revisando sistema..."
+
+          if [ ! -f "config.txt" ]; then
+            echo "🚨 INCIDENTE DETECTADO: Falta el archivo config.txt"
+            exit 1
+          fi
+
+          echo "Sistema estable"
