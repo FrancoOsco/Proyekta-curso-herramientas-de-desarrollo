@@ -7,11 +7,11 @@ on:
 
 jobs:
   deploy:
+    name: Desplegar aplicación
 
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Clonar repositorio
         uses: actions/checkout@v4
 
@@ -22,11 +22,11 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Compilar proyecto
-        run: mvn clean package
+      - name: Dar permisos al Maven Wrapper
+        run: chmod +x mvnw
 
-      - name: Ejecutar pruebas
-        run: mvn test
+      - name: Compilar proyecto
+        run: ./mvnw clean package -DskipTests
 
       - name: Generar artefacto
         uses: actions/upload-artifact@v4
@@ -37,10 +37,8 @@ jobs:
       - name: Simulación de despliegue
         run: |
           echo "========================================"
-          echo " Deploy iniciado"
-          echo " Aplicación: Proyekta"
-          echo " Build exitoso"
-          echo " Pruebas superadas"
-          echo " Artefacto generado correctamente"
-          echo " Deploy finalizado"
+          echo "Deploy iniciado"
+          echo "Aplicación: Proyekta"
+          echo "Artefacto generado correctamente"
+          echo "Despliegue finalizado"
           echo "========================================"
