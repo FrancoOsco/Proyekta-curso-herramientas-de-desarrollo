@@ -1,30 +1,42 @@
-version: '3'
-
 services:
+
   myDB:
     image: postgres:15.3
     container_name: my-database
     restart: always
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
-      - POSTGRES_USER=alumno
-      - POSTGRES_PASSWORD=123456
-      - POSTGRES_DB=proyekta
+      POSTGRES_USER: alumno
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: proyekta
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  pdAdmin:
+  pgAdmin:
     image: dpage/pgadmin4
     container_name: pgadmin4
     restart: always
     depends_on:
       - myDB
     ports:
-      - 5050:80
+      - "5050:80"
     environment:
-      - PGADMIN_DEFAULT_EMAIL=alumno@google.com
-      - PGADMIN_DEFAULT_PASSWORD=123456
+      PGADMIN_DEFAULT_EMAIL: alumno@google.com
+      PGADMIN_DEFAULT_PASSWORD: 123456
+
+  app:
+    build: .
+    container_name: proyekta-app
+    restart: always
+    depends_on:
+      - myDB
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://myDB:5432/proyekta
+      SPRING_DATASOURCE_USERNAME: alumno
+      SPRING_DATASOURCE_PASSWORD: 123456
 
 volumes:
   postgres_data:
