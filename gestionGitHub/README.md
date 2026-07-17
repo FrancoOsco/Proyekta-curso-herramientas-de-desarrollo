@@ -11,10 +11,10 @@ https://github.com/FrancoOsco/Proyekta-curso-herramientas-de-desarrollo.git
 
 2. Cambiar a una rama o crear una nueva si es necesaria para una nueva funcionalidad.
 ```bash
-   git checkout feature/prueba-alonso
-   ```
+   git checkout nombre-rama
+```
    o
-   ```bash
+```bash
    git checkout -b nueva-rama
 ```
 
@@ -33,7 +33,7 @@ https://github.com/FrancoOsco/Proyekta-curso-herramientas-de-desarrollo.git
 
 6. Crear un Pull Request para que se pueda verificar y aceptar la unión de ramas.
 
-7. Fusionar los cambios a la rama principal.
+7. Fusionar los cambios a la rama principal (main).
 
 ## Estructura de ramas
 - remotes/origin/backup-estable --> Rama de respaldo que almacena una versión estable.
